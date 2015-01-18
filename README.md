@@ -44,10 +44,16 @@ All fields (website name, username, password, notes) in pwdb are fully encrypted
 "iv":[38,92,228,134,81,108,52,27,160,116,48,109,234,212,229,45]}
 ```
 
-#Libraries
-##Client-side libraries
+
+#Client libraries
 * [jQuery](http://jquery.com)
 * [Bootstrap](http://getbootstrap.com)
 * [scrypt.js](https://github.com/tonyg/js-scrypt)
 * [Underscore](http://underscorejs.org)
 * [Backbone](http://backbonejs.org/)
+
+#Server libraries (node modules)
+* sqlite3
+* express
+* Q
+* scrypt
