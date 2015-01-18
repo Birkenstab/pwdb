@@ -1,9 +1,9 @@
 # pwdb
-pwdb is a password manager like 1Password but it works right in your browser and is fully open-source. Your passwords will be accesible from everywhere around the world but they are fully encrypted using your master password, even on the server.
+pwdb is a password manager like 1Password but it works right in your browser and is fully open-source. Your passwords will be accesible from everywhere around the world but they are fully encrypted using your master password, even on the server. The pwdb server uses nodejs.
 
 # How to install
 It is easy  
-Note: pwdb uses the WebCrypto-Api which requires a very modern browser.
+Note: pwdb uses the WebCrypto-Api which requires a modern browser.
 
 #Techincal details
 This is simplified description of the security mechanism used in pwdb.
@@ -35,7 +35,7 @@ YCXlFH8BJ7a8i3KBeSDIQoqe54RKj2w5dLvnWVdXOEK5ygqo9mR10avjdzQ3G9zINnAmkqrnBU2IVtSP
 5.  The unhashed password is stored in a JavaScript variable for field encryption
 
 ##Field encryption
-Every fields (website name, username, password, notes) are pwdb is fully encrypted
+All fields (website name, username, password, notes) in pwdb are fully encrypted
 1.  A SHA-256-hash of the password is generated so that the password always has the same length of 256 bits.
 2.  An initialization vector of 16 bytes random values is generated
 3.  The field value is encrypted using AES-CBC with the initialization vector and the SHA-256 hashe password:
@@ -43,3 +43,11 @@ Every fields (website name, username, password, notes) are pwdb is fully encrypt
 {"data":[149,124,145,56,111,213,150,37,251,104,168,186,244,66,144,229],
 "iv":[38,92,228,134,81,108,52,27,160,116,48,109,234,212,229,45]}
 ```
+
+#Libraries
+##Client-side libraries
+* [jQuery](http://jquery.com)
+* [Bootstrap](http://getbootstrap.com)
+* [scrypt.js](https://github.com/tonyg/js-scrypt)
+* [Underscore](http://underscorejs.org)
+* [Backbone](http://backbonejs.org/)
