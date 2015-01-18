@@ -51,6 +51,7 @@ All fields (website name, username, password, notes) in pwdb are fully encrypted
 * [scrypt.js](https://github.com/tonyg/js-scrypt)
 * [Underscore](http://underscorejs.org)
 * [Backbone](http://backbonejs.org/)
+* [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
 
 #Server libraries (node modules)
 * sqlite3
