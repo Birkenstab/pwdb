@@ -22,6 +22,7 @@ db.run("CREATE TABLE IF NOT EXISTS Records (UUID TEXT NOT NULL UNIQUE, UserID IN
 
 Q.longStackSupport = true;
 
+var _skipAccountActivation = true;
 var _sessionexpires = 3600*24;
 var _passwordAttempts = [ //Muss von der kürzesten zum Längsten Zeitraum gehen
     {period: 1*1000, skip: 3, multiplicator: 0.5*1000}, //Zeitraum: 1 Sekunde; 3 Aufrufe werden abgezogen; mit _passwordAttemptExponent (1,5) potentiert; alles wird mit 0,5 multipliziert
@@ -467,11 +468,12 @@ function addNewUser(username,password,salt) {
     scrypt.hash(password, scryptParams, deferred.makeNodeResolver());
     return deferred.promise.then(function(result) {
         console.log(result);
-        return Q.ninvoke(db,"run","INSERT INTO User (Username, Password, Salt, RegisterDate) VALUES ($username, $password, $salt, $date)",{
+        return Q.ninvoke(db,"run","INSERT INTO User (Username, Password, Salt, RegisterDate,Activated) VALUES ($username, $password, $salt, $date, $Activated)",{
             $username: username,
             $password: result,
             $salt: JSON.stringify(salt),
-            $date: new Date().getTime()
+            $date: new Date().getTime(),
+            $Activated: Number(_skipAccountActivation)
         });
     });
 }
