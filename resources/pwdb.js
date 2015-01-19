@@ -98,7 +98,16 @@ function init() {
             this.abortJobs(key);
             var job = {};
             this.addJob(key,job);
-            return encryptData(str2ab(session.password),str2ab(val)).then(function(encryptedData) {
+            
+            var salt;
+            if (this.changedAttributes()) {
+                try {
+                    salt = new Uint8Array(JSON.parse(this.get(key)).iv);
+                } catch(e) {
+                    salt = undefined;
+                }
+            }
+            return encryptData(str2ab(session.password),str2ab(val),salt).then(function(encryptedData) { //Wenn dieser Record schon geändert wurde, dann Salz vom letzten mal nehmen -> schneller
                 if (job.abort) {
                     return;
                 }
@@ -645,13 +654,13 @@ var cryptoSub = crypto.subtle || crypto.webkitSubtle || crypto.msSubtle;
 checkSupport();
 
 //Funktion zum Verschlüsseln der Daten
-function encryptData(password, data) {
-    var salt;
+function encryptData(password, data, salt) {
     return cryptoSub.digest({ name: "SHA-256" }, password).then(function (digestHash) { //SHA-256-Hash erzeugen
         return cryptoSub.importKey("raw", digestHash, { name: "AES-CBC" }, true, ["encrypt","decrypt"]);
         
     }).then(function (digestKey) {
-        salt = crypto.getRandomValues(new Uint8Array(16));
+        if (!salt)
+            salt = crypto.getRandomValues(new Uint8Array(16));
         var aesAlgorithmEncrypt = {
             name: "AES-CBC",
             iv: salt
