@@ -1,8 +1,10 @@
 module.exports = {
     port: 50173,
-    useProxy: true, //Wenn an, ist SSL deaktiviert
-    trustProxy: "loopback", //Proxy vertrauen, wenn es systemintern ist. Es kann auch ein Hostname sein
-    hostBind: "localhost",
+    useProxy: true, //Set whether a proxy is used. If this is false ssl will be activated and certificate and key must be specified
+    trustProxy: "loopback", //Specifiy wich proxy do you want to trust (use "loopback on Unix system if you use it with a proxy on the same machine). This can be a hostname too
+    sslKey: "/etc/apache2/ssl/apache.key", //Path where the ssl private key is located (leave it blank if you use a proxy)
+    sslCert: "/etc/apache2/ssl/apache.crt", //Path where the ssl certificate is located (leave it blank if you use a proxy)
+    hostBind: "localhost", //Host the http-server should be bound to (use "localhost" if you use it with a proxy on the same machine)
     
     //Things to leave alone
     skipAccountActivation: true,

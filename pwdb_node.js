@@ -27,37 +27,20 @@ db.run("CREATE TABLE IF NOT EXISTS Records (UUID TEXT NOT NULL UNIQUE, UserID IN
 
 Q.longStackSupport = true;
 
-var options = {
-  key: fs.readFileSync('/etc/apache2/ssl/apache.key'),
-  cert: fs.readFileSync('/etc/apache2/ssl/apache.crt')
-};
-
-var allowCrossDomain = function(req, res, next) {
-  var allowedHost = [
-      "https://manfred.local",
-      "https://home.sbecks.de"
-  ];
-
-  if(allowedHost.indexOf(req.headers.origin) !== -1 || !req.headers.origin) {
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Origin', req.headers.origin)
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH');
-    res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
-    next();
-  } else {
-    res.send({auth: false});
-  }
-}
-
-
 db.serialize();
 
 if (config.useProxy && config.trustProxy)
     app.set("trust proxy", config.trustProxy);
 
-app.use(allowCrossDomain);
 app.use(bodyParser.json());
 app.use(checknLogRequest);
+
+if (!config.useProxy) {
+    var options = {
+      key: fs.readFileSync(config.sslKey),
+      cert: fs.readFileSync(config.sslCert)
+    };
+}
 
 //Je nachdem ob man eine Proxy verwenden will oder nicht
 if (config.useProxy) {
