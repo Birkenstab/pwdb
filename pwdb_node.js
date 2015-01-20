@@ -6,6 +6,11 @@ var express = require('express');
 var Q = require("q");
 var scrypt = require("scrypt");
 var crypto = require("crypto");
+var config = require("./config.js");
+
+if (!config.port) {
+    throw Error("A config must me specified");
+}
 
 var app = express();
 var db = new sqlite3.Database('/home/knoten/pwdb/pwdb.db3');
@@ -21,18 +26,6 @@ db.run("CREATE TABLE IF NOT EXISTS Access (AccessID INTEGER PRIMARY KEY AUTOINCR
 db.run("CREATE TABLE IF NOT EXISTS Records (UUID TEXT NOT NULL UNIQUE, UserID INTEGER, Modified TEXT, Created TEXT, " + fields.join(" TEXT, ") + " TEXT);");
 
 Q.longStackSupport = true;
-
-var _skipAccountActivation = true;
-var _sessionexpires = 3600*24;
-var _passwordAttempts = [ //Muss von der kürzesten zum Längsten Zeitraum gehen
-    {period: 1*1000, skip: 3, multiplicator: 0.5*1000}, //Zeitraum: 1 Sekunde; 3 Aufrufe werden abgezogen; mit _passwordAttemptExponent (1,5) potentiert; alles wird mit 0,5 multipliziert
-    {period: 1*60*1000, skip: 20, multiplicator: 0.3*1000}, //usw.
-    {period: 15*60*1000, skip: 30, multiplicator: 0.25*1000},
-    {period: 2*60*60*1000, skip: 50, multiplicator: 0.1*1000},
-    {period: 24*60*60*1000, skip: 100, multiplicator: 0.1*1000}
-];
-var _passwordAttemptExponent = 1.5; //Verzögerung wird hiermit potentiert
-var _passwordAttemptIPMultiplicator = 3; //Bei IP-Verzögerung werden die Skips hiermit multipliziert
 
 var options = {
   key: fs.readFileSync('/etc/apache2/ssl/apache.key'),
@@ -59,16 +52,20 @@ var allowCrossDomain = function(req, res, next) {
 
 db.serialize();
 
-app.set("trust proxy", "loopback"); //Proxy vertrauen, wenn es systemintern ist
+if (config.useProxy && config.trustProxy)
+    app.set("trust proxy", config.trustProxy);
 
 app.use(allowCrossDomain);
 app.use(bodyParser.json());
 app.use(checknLogRequest);
 
 //Je nachdem ob man eine Proxy verwenden will oder nicht
-app.listen(50173,"localhost"); 
-/*var server = https.createServer(options, app);
-server.listen(50173, "manfred.local");*/
+if (config.useProxy) {
+    app.listen(config.port,config.hostBind); 
+} else {
+    var server = https.createServer(options, app);
+    server.listen(config.port, config.hostBind);
+}
 
 console.log("pwdb-server is running…");
 
@@ -105,26 +102,26 @@ function checknLogRequest(req,res,next) {
         if (!isLoginRequest)
             return false;
         return Q.ninvoke(db,"all","SELECT * FROM Access WHERE isLoginRequest = 1 AND Date >= ? AND ((PotentialUser = ? AND PotentialUser <> '') OR (UserID = ? AND UserID <> 0));",
-                         new Date().getTime() - _passwordAttempts[_passwordAttempts.length-1].period, req.body.username, session.UserID);
+                         new Date().getTime() - config.passwordAttempts[config.passwordAttempts.length-1].period, req.body.username, session.UserID);
     }).then(function(result) {
         if (!isLoginRequest) 
             return false;
         
-        for (var i = _passwordAttempts.length-1; i >= 0; i--) {
+        for (var i = config.passwordAttempts.length-1; i >= 0; i--) {
             var toRemove = [];
             for (var j = 0; j < result.length; j++) {
-                if (result[j].Date < new Date().getTime() - _passwordAttempts[i].period) {
+                if (result[j].Date < new Date().getTime() - config.passwordAttempts[i].period) {
                     toRemove.push(j);
                 }
             }
             for (var j = 0; j < toRemove.length; j++) {
                 result.splice(toRemove[i],1);
             }
-            if (result.length > _passwordAttempts[i].skip) {
-                var delay = Math.pow(result.length - _passwordAttempts[i].skip,_passwordAttemptExponent)*_passwordAttempts[i].multiplicator;
+            if (result.length > config.passwordAttempts[i].skip) {
+                var delay = Math.pow(result.length - config.passwordAttempts[i].skip,config.passwordAttemptExponent)*config.passwordAttempts[i].multiplicator;
                 console.log(result);
-                console.log(new Date().getTime() - _passwordAttempts[i].period);
-                console.log("Verzögerung (" + _passwordAttempts[i].period/1000 + " s; " + result.length + "x): " + delay);
+                console.log(new Date().getTime() - config.passwordAttempts[i].period);
+                console.log("Verzögerung (" + config.passwordAttempts[i].period/1000 + " s; " + result.length + "x): " + delay);
                 return Q.delay(true,delay);
             }
         }
@@ -473,7 +470,7 @@ function addNewUser(username,password,salt) {
             $password: result,
             $salt: JSON.stringify(salt),
             $date: new Date().getTime(),
-            $Activated: Number(_skipAccountActivation)
+            $Activated: Number(config.skipAccountActivation)
         });
     });
 }
