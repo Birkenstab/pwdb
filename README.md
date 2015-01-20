@@ -3,7 +3,7 @@ pwdb is a password manager like 1Password but it works right in your browser and
 It is still in development.
 
 # How to install
-It is easy  
+Just download all the files, execute and follow the configure.sh script.  
 Note: pwdb uses the WebCrypto-Api which requires a modern browser.
 
 #Techincal details
