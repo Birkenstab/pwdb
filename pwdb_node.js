@@ -9,11 +9,15 @@ var crypto = require("crypto");
 var config = require("./config.js");
 
 if (!config.port) {
-    throw Error("A config must me specified");
+    throw Error("No config found");
 }
 
 var app = express();
-var db = new sqlite3.Database('/home/knoten/pwdb/pwdb.db3');
+var db = new sqlite3.Database('/home/knoten/pwdb/pwdb.db3',sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,function(err) {
+    if (err) {
+        throw Error("Error opening database: " + err.msg);
+    }
+});
 var fields = ["website","username","password","notes"];
 var files = ["backbone-min.js","index.html","jquery-2.1.0.min.js","pwdb.css","pwdb.js","scrypt.js","underscore-min.js","bootstrap/css/bootstrap.min.css","bootstrap/js/bootstrap.min.js","font-awesome/css/font-awesome.min.css","font-awesome/fonts/fontawesome-webfont.eot","font-awesome/fonts/fontawesome-webfont.svg","font-awesome/fonts/fontawesome-webfont.ttf","font-awesome/fonts/fontawesome-webfont.woff","font-awesome/fonts/FontAwesome.otf"]; //Files that can be accessed via webserver
 

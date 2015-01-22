@@ -3,7 +3,11 @@ pwdb is a password manager like 1Password but it works right in your browser and
 It is still in development.
 
 # How to install
-Just download all the files, execute and follow the configure.sh script.  
+* [Node](http://nodejs.org) has to be installed
+* You need the node modules sqlite3, express, q and scrypt. You can install them using this Terminal command: ``npm install sqlite3 express q scrypt``
+* Configure the config.js file
+* To start the pwdb server run ``node pwdb_node.js``
+
 Note: pwdb uses the WebCrypto-Api which requires a modern browser.
 
 #Techincal details
@@ -57,5 +61,5 @@ All fields (website name, username, password, notes) in pwdb are fully encrypted
 #Server libraries (node modules)
 * sqlite3
 * express
-* Q
+* q
 * scrypt
