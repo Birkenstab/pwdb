@@ -29,15 +29,25 @@
       <div class="inner clearfix">
         <section id="main-content">
           <h1>
-<a id="pwdb" class="anchor" href="#pwdb" aria-hidden="true"><span class="octicon octicon-link"></span></a>pwdb</h1>
+<a id="pwdb-alpha" class="anchor" href="#pwdb-alpha" aria-hidden="true"><span class="octicon octicon-link"></span></a>pwdb [Alpha]</h1>
 
-<p>pwdb is a password manager like 1Password but it works right in your browser and is fully open-source. Your passwords will be accesible from everywhere around the world but they are fully encrypted using your master password, even on the server. The pwdb server uses nodejs.</p>
+<p>pwdb is a password manager like 1Password but it works right in your browser and is fully open-source. Your passwords will be accesible from everywhere around the world but they are fully encrypted using your master password, even on the server. The pwdb server uses nodejs.<br>
+It is still in development.</p>
 
 <h1>
 <a id="how-to-install" class="anchor" href="#how-to-install" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to install</h1>
 
-<p>It is easy<br>
-Note: pwdb uses the WebCrypto-Api which requires a modern browser.</p>
+<ul>
+<li>
+<a href="http://nodejs.org">Node</a> has to be installed</li>
+<li>You need the node modules sqlite3, express, q and scrypt. You can install them using this Terminal command: <code>npm install sqlite3 express q scrypt</code>
+</li>
+<li>Configure the config.js file</li>
+<li>To start the pwdb server run <code>node pwdb_node.js</code>
+</li>
+</ul>
+
+<p>Note: pwdb uses the WebCrypto-Api which requires a modern browser.</p>
 
 <h1>
 <a id="techincal-details" class="anchor" href="#techincal-details" aria-hidden="true"><span class="octicon octicon-link"></span></a>Techincal details</h1>
@@ -108,6 +118,7 @@ Note: pwdb uses the WebCrypto-Api which requires a modern browser.</p>
 <li><a href="https://github.com/tonyg/js-scrypt">scrypt.js</a></li>
 <li><a href="http://underscorejs.org">Underscore</a></li>
 <li><a href="http://backbonejs.org/">Backbone</a></li>
+<li><a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a></li>
 </ul>
 
 <h1>
@@ -116,7 +127,7 @@ Note: pwdb uses the WebCrypto-Api which requires a modern browser.</p>
 <ul>
 <li>sqlite3</li>
 <li>express</li>
-<li>Q</li>
+<li>q</li>
 <li>scrypt</li>
 </ul>
         </section>
