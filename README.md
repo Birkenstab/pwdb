@@ -4,7 +4,7 @@ It is still in development.
 
 # How to install
 * [Node](http://nodejs.org) has to be installed
-* You need the node modules sqlite3, express, q and scrypt. You can install them using this Terminal command: ``npm install sqlite3 express q scrypt``
+* You need the node modules sqlite3, express, body-parser, q and scrypt. You can install them using this Terminal command: ``npm install sqlite3 express body-parser q scrypt``
 * Configure the config.js file
 * To start the pwdb server run ``node pwdb_node.js``
 
@@ -61,5 +61,6 @@ All fields (website name, username, password, notes) in pwdb are fully encrypted
 #Server libraries (node modules)
 * sqlite3
 * express
+* body-parser
 * q
 * scrypt
