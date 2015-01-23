@@ -1,4 +1,4 @@
-var serverRoot = "/pwdb/";
+var serverRoot = location.pathname;
 var getUserSaltTimer;
 var userSalt = {};
 var session = {}; //token, password, username

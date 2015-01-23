@@ -12,10 +12,12 @@ if (!config.port) {
     throw Error("No config found");
 }
 
+var directory = __dirname;
+
 var app = express();
-var db = new sqlite3.Database('/home/knoten/pwdb/pwdb.db3',sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,function(err) {
+var db = new sqlite3.Database(directory + '/pwdb.db3',sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,function(err) {
     if (err) {
-        throw Error("Error opening database: " + err.msg);
+        throw Error("Error opening database: " + err);
     }
 });
 var fields = ["website","username","password","notes"];
@@ -207,7 +209,7 @@ function getFile(filename,res) {
         return;
     }
     
-    Q.ninvoke(fs,"readFile","/home/knoten/pwdb/resources/" + files[index]).then(function(result) {
+    Q.ninvoke(fs,"readFile",directory + "/resources/" + files[index]).then(function(result) {
         if (filename.match(".html$")) {
             res.set("Content-Type", "text/html");
         } else if (filename.match(".js$")) {
