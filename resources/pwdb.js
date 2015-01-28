@@ -651,7 +651,6 @@ function checkSupport() {
 
 
 var cryptoSub = crypto.subtle || crypto.webkitSubtle || crypto.msSubtle;
-checkSupport();
 
 //Funktion zum Verschlüsseln der Daten
 function encryptData(password, data, salt) {
@@ -906,9 +905,6 @@ function enableProtocol() {
         oldSetRequestHeader.apply(this,arguments);
     };
 }
-
-enableProtocol();
-$(init);
 
 
 
@@ -1167,3 +1163,8 @@ function str2ab(str) {
   }
   return buf;
 }
+
+
+enableProtocol();
+checkSupport();
+$(init);
